@@ -12,6 +12,9 @@ install:
 dev: 
   concurrently "cd svelte-app && pnpm run dev" "cd electron-app && pnpm run dev"
 
+dev-frontend:
+	concurrently "cd svelte-app && pnpm run dev"
+
 build: full-svelte
 	concurrently "cd electron-app && pnpm run build:win"
 

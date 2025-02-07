@@ -2,6 +2,11 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import { spawn } from 'child_process'
+
+let pocketBaseProcess
+const adminEmail = 'admin@pocketbase.com'
+const adminPass = 'amiodarone'
 
 function createWindow(): void {
   // Create the browser window.
@@ -26,6 +31,17 @@ function createWindow(): void {
     return { action: 'deny' }
   })
 
+  mainWindow.on('close', () => {
+    if (pocketBaseProcess) {
+      console.log('Stopping PocketBase...')
+      pocketBaseProcess.kill('SIGINT')
+
+      pocketBaseProcess.on('close', () => {
+        app.quit()
+      })
+    }
+  })
+
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.
   if (is.dev) {
@@ -37,12 +53,59 @@ function createWindow(): void {
   }
 }
 
+function createAdminAccount() {
+  return new Promise((resolve, reject) => {
+    const createAdmin = spawn('../pocketbase', ['superuser', 'upsert', adminEmail, adminPass])
+
+    createAdmin.stdout.on('data', () => {
+      console.log('Create admin PocketBase account if not already exist.')
+    })
+
+    createAdmin.on('close', (code) => {
+      if (code === 0) {
+        console.log('Admin account either exists or created successfully.')
+        resolve(undefined)
+      } else {
+        reject(new Error('Failed to create admin account'))
+      }
+    })
+
+    createAdmin.on('error', (err) => {
+      reject(err)
+    })
+  })
+}
+
+function runPocketbase() {
+  const exePath = './pocketbase.exe'
+  console.log('starting Pocketbase...')
+  pocketBaseProcess = spawn(exePath, ['serve'])
+
+  pocketBaseProcess.stdout.on('data', (data) => {
+    console.log(`Pocketbase: ${data.toString()}`)
+  })
+
+  pocketBaseProcess.on('close', (code) => {
+    console.log(`Pocketbase exited with code ${code}`)
+  })
+
+  pocketBaseProcess.on('error', (err) => {
+    console.log('Failed to start Pocketbase: ', err)
+  })
+}
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
+
+  try {
+    await createAdminAccount()
+  } catch (err) {
+    console.log('Error creating admin account: ', err)
+  }
 
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.

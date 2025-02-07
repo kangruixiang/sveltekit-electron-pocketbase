@@ -1,3 +1,7 @@
+# custom
+pocketbase.exe
+pb_data/
+
 # Logs
 logs
 *.log

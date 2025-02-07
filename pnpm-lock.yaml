@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      pocketbase:
+        specifier: ^0.25.1
+        version: 0.25.1
     devDependencies:
       concurrently:
         specifier: ^9.1.2
@@ -63,6 +67,9 @@ packages:
 
   lodash@4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
+
+  pocketbase@0.25.1:
+    resolution: {integrity: sha512-2IH0KLI/qMNR/E17C7BGWX2FxW7Tead+igLHOWZ45P56v/NyVT18Jnmddeft+3qWWGL1Hog2F8bc4orWV/+Fcg==}
 
   require-directory@2.1.1:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}
@@ -160,6 +167,8 @@ snapshots:
   is-fullwidth-code-point@3.0.0: {}
 
   lodash@4.17.21: {}
+
+  pocketbase@0.25.1: {}
 
   require-directory@2.1.1: {}
 
