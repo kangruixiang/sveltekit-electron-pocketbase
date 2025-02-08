@@ -34,5 +34,4 @@ export async function getNotebook(name: string) {
   return notebook
 }
 
-await getAuth()
 export default pb

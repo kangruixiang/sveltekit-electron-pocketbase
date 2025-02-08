@@ -6,7 +6,7 @@
   "author": "example.com",
   "homepage": "https://electron-vite.org",
   "build": {
-    "extraResources": ["./extraResources/**"]
+    "extraResources": ["./db/pb_migrations", "./db/pocketbase.exe"]
   },
   "scripts": {
     "format": "prettier --plugin prettier-plugin-svelte --write .",
