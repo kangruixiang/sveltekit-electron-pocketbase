@@ -4,7 +4,7 @@ This is a scaffolding project for sveltekit+pocketbase+electron. Most of the ins
 
 ## How to use
 
-- Download [Pocketbase](https://pocketbase.io/docs/) and place under root directory.
+- Download [Pocketbase](https://pocketbase.io/docs/) and place under `electron-app/db`
 - Install [sd](https://github.com/chmln/sd).
 - Install [Just](https://github.com/casey/just). Then run `just install` and `just dev` in root directory to start.
  
