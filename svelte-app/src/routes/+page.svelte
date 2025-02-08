@@ -1,5 +1,15 @@
 <script lang="ts">
 	let { data } = $props();
+	import pb from '$lib/db';
+
+	// export async function load() {
+	//   console.log("Logged in to Pocket client: ", pb.authStore.isValid)
+	//   setTimeout(async () => {
+	//     const notes = await pb.collection('notes').getFullList()
+	//     console.log(notes)
+	//   }, 200)
+
+	// }
 
 	const testNote = data.notes[0].title;
 </script>

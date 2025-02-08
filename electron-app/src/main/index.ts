@@ -3,10 +3,14 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { spawn } from 'child_process'
+import { resourcesPath } from 'process'
 
 let pocketBaseProcess
 const adminEmail = 'admin@pocketbase.com'
 const adminPass = 'amiodarone'
+const pocketbaseDevPath = join(__dirname, '..', '..', 'db', 'pocketbase')
+const pocketbaseProdPath = join(resourcesPath, 'db', 'pocketbase')
+
 
 function createWindow(): void {
   // Create the browser window.
@@ -53,10 +57,16 @@ function createWindow(): void {
   }
 }
 
+
+
 function createAdminAccount() {
   return new Promise((resolve, reject) => {
-    console.log(join('..', 'pocketbase'))
-    const createAdmin = spawn('../pocketbase', ['superuser', 'upsert', adminEmail, adminPass])
+    let createAdmin
+    if (is.dev) {
+      createAdmin = spawn(pocketbaseDevPath, ['superuser', 'upsert', adminEmail, adminPass])
+    } else {
+      createAdmin = spawn(pocketbaseProdPath, ['superuser', 'upsert', adminEmail, adminPass])
+    }
 
     createAdmin.stdout.on('data', () => {
       console.log('Create admin PocketBase account if not already exist.')
@@ -79,9 +89,14 @@ function createAdminAccount() {
 
 function runPocketbase() {
 
-  const exePath = '../pocketbase.exe'
+  let pocketBaseProcess
+  if (is.dev) {
+    pocketBaseProcess = spawn(pocketbaseDevPath, ['serve'])
+  } else {
+    pocketBaseProcess = spawn(pocketbaseProdPath, ['serve'])
+  }
+
   console.log('starting Pocketbase...')
-  pocketBaseProcess = spawn(exePath, ['serve'])
 
   pocketBaseProcess.stdout.on('data', (data) => {
     console.log(`Pocketbase: ${data.toString()}`)

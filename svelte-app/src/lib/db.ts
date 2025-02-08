@@ -2,7 +2,11 @@ import PocketBase from 'pocketbase'
 
 const pb = new PocketBase('http://127.0.0.1:8090')
 
-pb.collection('_superusers').authWithPassword('admin@pocketbase.com', 'amiodarone')
+
+export async function getAuth() {
+  await pb.collection('_superusers').authWithPassword('admin@pocketbase.com', 'amiodarone')
+  console.log("Logged in to Pocket client: ", pb.authStore.isValid)
+}
 
 export async function getNotes(notebook: string) {
   if (notebook == '') {
@@ -30,4 +34,5 @@ export async function getNotebook(name: string) {
   return notebook
 }
 
+await getAuth()
 export default pb
