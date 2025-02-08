@@ -55,6 +55,7 @@ function createWindow(): void {
 
 function createAdminAccount() {
   return new Promise((resolve, reject) => {
+    console.log(join('..', 'pocketbase'))
     const createAdmin = spawn('../pocketbase', ['superuser', 'upsert', adminEmail, adminPass])
 
     createAdmin.stdout.on('data', () => {
@@ -77,7 +78,8 @@ function createAdminAccount() {
 }
 
 function runPocketbase() {
-  const exePath = './pocketbase.exe'
+
+  const exePath = '../pocketbase.exe'
   console.log('starting Pocketbase...')
   pocketBaseProcess = spawn(exePath, ['serve'])
 
@@ -98,14 +100,19 @@ function runPocketbase() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(async () => {
+
+
+  // try {
+  //   await createAdminAccount()
+  // } catch (err) {
+  //   console.log('Error creating admin account: ', err)
+  // }
+
+  // run pocketbase
+  runPocketbase()
+
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
-
-  try {
-    await createAdminAccount()
-  } catch (err) {
-    console.log('Error creating admin account: ', err)
-  }
 
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
